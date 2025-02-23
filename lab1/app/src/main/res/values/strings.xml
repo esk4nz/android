@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">First_lab</string>
+    <string name="first_input">Enter the first number</string>
+    <string name="second_input">Enter the second number</string>
+    <string name="ok">Ок</string>
+    <string name="enter_two_numbers">Введіть обидва числа</string>
+    <string name="choose_an_operation">Виберіть операцію</string>
+    <string name="division_by_null">Ділення на нуль неможливе</string>
+    <string name="unknown">Невідома операція</string>
+</resources>
