@@ -19,7 +19,7 @@ public class InputFragment extends Fragment {
     private EditText firstNumber, secondNumber;
     private RadioGroup radioGroup;
     private Button buttonOk;
-    private OnCalculationListener callback;
+//    private OnCalculationListener callback;
 
     public interface OnCalculationListener {
         void onCalculate(double result);
@@ -53,7 +53,7 @@ public class InputFragment extends Fragment {
         String secondText = secondNumber.getText().toString();
 
         if (firstText.isEmpty() || secondText.isEmpty()) {
-            Toast.makeText(getActivity(), "Будь ласка, введіть два числа", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.enter_two_numbers, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -63,7 +63,7 @@ public class InputFragment extends Fragment {
 
         int selectedId = radioGroup.getCheckedRadioButtonId();
         if (selectedId == -1) {
-            Toast.makeText(getActivity(), "Оберіть операцію", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.choose_an_operation, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -82,7 +82,7 @@ public class InputFragment extends Fragment {
                 break;
             case "/":
                 if (num2 == 0) {
-                    Toast.makeText(getActivity(), "Ділення на 0 неможливе!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.division_by_null, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 output = num1 / num2;
