@@ -19,7 +19,6 @@ public class InputFragment extends Fragment {
     private EditText firstNumber, secondNumber;
     private RadioGroup radioGroup;
     private Button buttonOk;
-//    private OnCalculationListener callback;
 
     public interface OnCalculationListener {
         void onCalculate(double result);
@@ -37,16 +36,8 @@ public class InputFragment extends Fragment {
 
         buttonOk.setOnClickListener(v -> calculateResult());
 
-        Bundle bundle = getArguments();
-        if (bundle != null && bundle.getBoolean("clear_fields", false)) {
-            firstNumber.setText("");
-            secondNumber.setText("");
-            radioGroup.clearCheck();
-        }
-
         return view;
     }
-
 
     private void calculateResult() {
         String firstText = firstNumber.getText().toString();
@@ -93,4 +84,13 @@ public class InputFragment extends Fragment {
             ((OnCalculationListener) getActivity()).onCalculate(output);
         }
     }
+
+    public void clearFields() {
+        if (firstNumber != null && secondNumber != null && radioGroup != null) {
+            firstNumber.setText("");
+            secondNumber.setText("");
+            radioGroup.clearCheck();
+        }
+    }
+
 }
