@@ -9,6 +9,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+import android.content.Intent;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,10 +37,18 @@ public class InputFragment extends Fragment {
         radioGroup = view.findViewById(R.id.radioGroup);
         buttonOk = view.findViewById(R.id.button_ok);
 
+        Button buttonOpen = view.findViewById(R.id.button_open);
+
         buttonOk.setOnClickListener(v -> calculateResult());
+
+        buttonOpen.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ResultsActivity.class);
+            startActivity(intent);
+        });
 
         return view;
     }
+
 
     private void calculateResult() {
         String firstText = firstNumber.getText().toString();
@@ -78,6 +89,15 @@ public class InputFragment extends Fragment {
                 }
                 output = num1 / num2;
                 break;
+        }
+
+        String entry = num1 + " " + operation + " " + num2 + " = " + output + "\n";
+
+        try (FileOutputStream fos = getActivity().openFileOutput("results.txt", getActivity().MODE_APPEND)) {
+            fos.write(entry.getBytes());
+            Toast.makeText(getActivity(), "Результат збережено", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            Toast.makeText(getActivity(), "Помилка запису у файл", Toast.LENGTH_SHORT).show();
         }
 
         if (getActivity() instanceof OnCalculationListener) {
