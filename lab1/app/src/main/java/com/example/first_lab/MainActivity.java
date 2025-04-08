@@ -1,88 +1,66 @@
 package com.example.first_lab;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements InputFragment.OnCalculationListener, ResultFragment.OnCancelListener {
 
-    private EditText first_number, second_number;
-    private TextView result;
-    private Button button;
-    private RadioGroup radioGroup;
+    private InputFragment inputFragment;
+    private ResultFragment resultFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        first_number = findViewById(R.id.first_number);
-        second_number = findViewById(R.id.second_number);
-        result = findViewById(R.id.result);
-        button = findViewById(R.id.button);
-        radioGroup = findViewById(R.id.radioGroup);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        inputFragment = (InputFragment) fragmentManager.findFragmentByTag("input");
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calculateResult();
-            }
-        });
+        if (inputFragment == null) {
+            inputFragment = new InputFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.fragment_container, inputFragment, "input")
+                    .commit();
+        }
     }
 
-    private void calculateResult() {
-        String firstText = first_number.getText().toString();
-        String secondText = second_number.getText().toString();
+    @Override
+    public void onCalculate(double result) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-        if (firstText.isEmpty() || secondText.isEmpty()) {
-            Toast.makeText(this, R.string.enter_two_numbers, Toast.LENGTH_SHORT).show();
-            return;
+        transaction.hide(inputFragment);
+
+        resultFragment = ResultFragment.newInstance(result);
+        resultFragment.setOnCancelListener(this);
+
+        transaction.add(R.id.fragment_container, resultFragment, "result");
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    @Override
+    public void onCancel() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        inputFragment = (InputFragment) fragmentManager.findFragmentByTag("input");
+
+        if (inputFragment != null) {
+            inputFragment.clearFields();
+            transaction.show(inputFragment);
+        } else {
+            inputFragment = new InputFragment();
+            transaction.add(R.id.fragment_container, inputFragment, "input");
         }
 
-        double num1 = Double.parseDouble(firstText);
-        double num2 = Double.parseDouble(secondText);
-        double output = 0.0;
-
-        int selectedId = radioGroup.getCheckedRadioButtonId();
-        if (selectedId == -1) {
-            Toast.makeText(this, R.string.choose_an_operation, Toast.LENGTH_SHORT).show();
-            return;
+        resultFragment = (ResultFragment) fragmentManager.findFragmentByTag("result");
+        if (resultFragment != null) {
+            transaction.remove(resultFragment);
         }
 
-        RadioButton selectedButton = findViewById(selectedId);
-        String operation = selectedButton.getText().toString();
-
-        switch (operation) {
-            case "+":
-                output = num1 + num2;
-                break;
-            case "-":
-                output = num1 - num2;
-                break;
-            case "*":
-                output = num1 * num2;
-                break;
-            case "/":
-                if (num2 == 0) {
-                    Toast.makeText(this, R.string.division_by_null, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                output = num1 / num2;
-                break;
-            default:
-                Toast.makeText(this, R.string.unknown, Toast.LENGTH_SHORT).show();
-                return;
-        }
-
-        result.setText("Результат: " + output);
+        transaction.commit();
     }
 }

@@ -7,4 +7,5 @@
     <string name="choose_an_operation">Виберіть операцію</string>
     <string name="division_by_null">Ділення на нуль неможливе</string>
     <string name="unknown">Невідома операція</string>
+    <string name="result">Результат</string>
 </resources>
