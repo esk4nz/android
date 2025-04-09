@@ -16,8 +16,8 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE_PICK_AUDIO = 1001;
-    private static final int REQUEST_CODE_PICK_VIDEO = 1002;
+    private static final int REQUEST_CODE_PICK_AUDIO = 1;
+    private static final int REQUEST_CODE_PICK_VIDEO = 2;
 
     private VideoView videoView;
     private PlayerView playerView;
